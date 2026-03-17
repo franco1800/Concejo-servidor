@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel de Carga — Concejo Santa Fe</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#18181b;--ink2:#52525b;--ink3:#a1a1aa;
+  --bg:#f7f6f2;--card:#fff;--card2:#fafaf7;
+  --border:#e4e3dc;--border2:#d4d3cc;
+  --res:#1d4ed8;--res-bg:#eff6ff;
+  --ord:#0f766e;--ord-bg:#f0fdfa;
+  --com:#7c3aed;--com-bg:#f5f3ff;
+  --dec:#b45309;--dec-bg:#fffbeb;
+  --dcr:#be123c;--dcr-bg:#fff1f2;
+  --green:#15803d;--green-bg:#f0fdf4;
+  --sans:'IBM Plex Sans',sans-serif;
+  --serif:'Lora',serif;
+  --mono:'IBM Plex Mono',monospace;
+  --r:10px;--r2:6px;
+  --sh:0 1px 2px rgba(0,0,0,0.05),0 2px 8px rgba(0,0,0,0.06);
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);min-height:100vh}
+.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
+.topbar-title{font-family:var(--serif);font-size:1.1rem;font-weight:600}
+.topbar-sub{font-size:11px;color:var(--ink3);margin-top:1px}
+.topbar a{font-size:12px;color:var(--ink2);text-decoration:none;border:1px solid var(--border);padding:6px 14px;border-radius:var(--r2);transition:all 0.15s}
+.topbar a:hover{border-color:var(--ink2)}
+.main{max-width:760px;margin:0 auto;padding:2rem 1.25rem 4rem}
+
+h2{font-family:var(--serif);font-size:1.1rem;font-weight:600;margin-bottom:4px}
+.section-sub{font-size:12px;color:var(--ink3);margin-bottom:1.25rem}
+.section{margin-bottom:2.5rem}
+
+.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.upload-card{background:var(--card);border:1.5px dashed var(--border2);border-radius:var(--r);padding:1.25rem;cursor:pointer;transition:all 0.2s;text-align:center;position:relative;overflow:hidden}
+.upload-card input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-card:hover{border-style:solid}
+.uc-icon{font-size:1.4rem;margin-bottom:6px}
+.uc-label{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:2px}
+.uc-sub{font-size:11px;color:var(--ink3)}
+.uc-status{font-size:11px;font-weight:500;margin-top:6px;min-height:16px}
+
+.uc-res:hover{border-color:var(--res);background:var(--res-bg)}
+.uc-ord:hover{border-color:var(--ord);background:var(--ord-bg)}
+.uc-com:hover{border-color:var(--com);background:var(--com-bg)}
+.uc-dec:hover{border-color:var(--dec);background:var(--dec-bg)}
+.uc-dcr:hover{border-color:var(--dcr);background:var(--dcr-bg)}
+.uc-img:hover{border-color:#64748b;background:#f8fafc}
+
+.progress{height:4px;background:var(--border);border-radius:2px;margin:10px 0;overflow:hidden;display:none}
+.progress-fill{height:100%;border-radius:2px;transition:width 0.3s;background:var(--ink)}
+.progress.show{display:block}
+
+.log{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:12px 14px;font-family:var(--mono);font-size:11.5px;color:var(--ink2);max-height:180px;overflow-y:auto;display:none;line-height:1.7}
+.log.show{display:block}
+.log .ok{color:var(--green)}
+.log .err{color:#dc2626}
+.log .info{color:var(--ink3)}
+
+.manual-section{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem}
+.form-row{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.form-row label{font-size:12px;font-weight:500;color:var(--ink2)}
+.form-row input,.form-row textarea,.form-row select{padding:9px 11px;border:1px solid var(--border);border-radius:var(--r2);font-size:13px;font-family:var(--sans);color:var(--ink);background:var(--card);outline:none;transition:border 0.15s;width:100%}
+.form-row input:focus,.form-row textarea:focus,.form-row select:focus{border-color:var(--ink2)}
+.form-row textarea{resize:vertical;min-height:70px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-primary{padding:10px 20px;background:var(--ink);color:#fff;border:none;border-radius:var(--r2);font-size:13px;font-family:var(--sans);font-weight:500;cursor:pointer;transition:opacity 0.15s}
+.btn-primary:hover{opacity:0.85}
+.btn-primary:disabled{opacity:0.4;cursor:not-allowed}
+
+.toast{position:fixed;bottom:1.25rem;right:1.25rem;padding:10px 18px;border-radius:var(--r2);font-size:13px;font-weight:500;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:99}
+.toast.ok{background:#15803d;color:#fff}
+.toast.err{background:#dc2626;color:#fff}
+.toast.show{opacity:1}
+
+.img-upload-area{border:1.5px dashed var(--border2);border-radius:var(--r);padding:1.5rem;text-align:center;cursor:pointer;position:relative;transition:all 0.2s;background:var(--card)}
+.img-upload-area input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.img-upload-area:hover{border-color:#64748b;background:#f8fafc}
+.img-preview{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.img-prev-item{position:relative}
+.img-prev-item img{width:64px;height:64px;object-fit:cover;border-radius:6px;border:1px solid var(--border);display:block}
+.img-prev-item button{position:absolute;top:-5px;right:-5px;width:16px;height:16px;border-radius:50%;background:#dc2626;color:#fff;border:none;font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div>
+    <div class="topbar-title">Panel de Carga</div>
+    <div class="topbar-sub">Concejo Municipal · Santa Fe</div>
+  </div>
+  <a href="index.html">← Ver buscador</a>
+</div>
+
+<div class="main">
+
+  <!-- CARGA MASIVA POR TIPO -->
+  <div class="section">
+    <h2>Cargar archivo por tipo</h2>
+    <p class="section-sub">Subí el .docx de cada tipo. Los proyectos existentes de ese tipo serán reemplazados.</p>
+    <div class="upload-grid">
+      <div class="upload-card uc-res"><input type="file" accept=".docx,.txt" onchange="loadDocx(this,'resolución')"><div class="uc-icon">📘</div><div class="uc-label">Resoluciones</div><div class="uc-sub">.docx o .txt</div><div class="uc-status" id="st-res"></div></div>
+      <div class="upload-card uc-ord"><input type="file" accept=".docx,.txt" onchange="loadDocx(this,'ordenanza')"><div class="uc-icon">📗</div><div class="uc-label">Ordenanzas</div><div class="uc-sub">.docx o .txt</div><div class="uc-status" id="st-ord"></div></div>
+      <div class="upload-card uc-com"><input type="file" accept=".docx,.txt" onchange="loadDocx(this,'comunicación')"><div class="uc-icon">📙</div><div class="uc-label">Comunicaciones</div><div class="uc-sub">.docx o .txt</div><div class="uc-status" id="st-com"></div></div>
+      <div class="upload-card uc-dec"><input type="file" accept=".docx,.txt" onchange="loadDocx(this,'declaración')"><div class="uc-icon">📒</div><div class="uc-label">Declaraciones</div><div class="uc-sub">.docx o .txt</div><div class="uc-status" id="st-dec"></div></div>
+      <div class="upload-card uc-dcr" style="grid-column:span 2"><input type="file" accept=".docx,.txt" onchange="loadDocx(this,'decreto')"><div class="uc-icon">📕</div><div class="uc-label">Decretos</div><div class="uc-sub">.docx o .txt</div><div class="uc-status" id="st-dcr"></div></div>
+    </div>
+    <div class="progress" id="prog"><div class="progress-fill" id="progf"></div></div>
+    <div class="log" id="log"></div>
+  </div>
+
+  <!-- CARGA MANUAL DE NUEVO PROYECTO -->
+  <div class="section">
+    <h2>Agregar proyecto individual</h2>
+    <p class="section-sub">Para cargar proyectos nuevos uno por uno, con foto opcional.</p>
+    <div class="manual-section">
+      <div class="form-grid">
+        <div class="form-row">
+          <label>Número</label>
+          <input type="text" id="m-num" placeholder="12953">
+        </div>
+        <div class="form-row">
+          <label>Fecha</label>
+          <input type="text" id="m-fecha" placeholder="18/04/24">
+        </div>
+      </div>
+      <div class="form-row">
+        <label>Tipo</label>
+        <select id="m-tipo">
+          <option value="resolución">Resolución</option>
+          <option value="ordenanza">Ordenanza</option>
+          <option value="comunicación">Comunicación</option>
+          <option value="declaración">Declaración</option>
+          <option value="decreto">Decreto</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>Descripción</label>
+        <textarea id="m-desc" placeholder="Texto del proyecto..."></textarea>
+      </div>
+      <div class="form-row">
+        <label>Expediente (opcional)</label>
+        <input type="text" id="m-expte" placeholder="CO-0062-01945706-8 (PC) - Nota de elevación...">
+      </div>
+      <div class="form-row">
+        <label>Foto del proyecto (opcional)</label>
+        <div class="img-upload-area" onclick="document.getElementById('m-img').click()">
+          <input type="file" id="m-img" accept="image/*" onchange="previewImg(this)" style="position:absolute;opacity:0;pointer-events:none">
+          <div style="font-size:11px;color:var(--ink3)">Hacé clic para subir una imagen</div>
+          <div class="img-preview" id="img-preview"></div>
+        </div>
+      </div>
+      <button class="btn-primary" id="btn-save" onclick="saveManual()">Guardar proyecto</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js"></script>
+<script>
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let pendingImgData = null;
+
+function showToast(msg, type='ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + type + ' show';
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function logMsg(msg, type='info') {
+  const log = document.getElementById('log');
+  log.classList.add('show');
+  log.innerHTML += `<div class="${type}">${msg}</div>`;
+  log.scrollTop = log.scrollHeight;
+}
+
+function parseText(txt, tipo) {
+  const lines = txt.split('\n').map(s => s.trim()).filter(Boolean);
+  const re = /^(\d{4,6})\s+(\d{2}\/\d{2}\/\d{2,4})\s+(.+)/;
+  const er = /^Expte\.\s+(.+)/i;
+  const res = []; let cur = null;
+  for (const l of lines) {
+    const m = l.match(re);
+    if (m) { if (cur) res.push(cur); cur = {id: tipo+'_'+m[1], num: m[1], fecha: m[2], descripcion: m[3], expediente: '', tipo, imagen_url: null}; }
+    else if (cur && er.test(l)) cur.expediente = l.replace(/^Expte\.\s*/i, '');
+    else if (cur && l.length > 2) cur.descripcion += ' ' + l;
+  }
+  if (cur) res.push(cur);
+  return res;
+}
+
+async function loadDocx(input, tipo) {
+  const file = input.files[0]; if (!file) return;
+  const pb = document.getElementById('prog'); const pf = document.getElementById('progf');
+  const st = document.getElementById('st-' + {resolución:'res',ordenanza:'ord',comunicación:'com',declaración:'dec',decreto:'dcr'}[tipo]);
+  pb.style.display = 'block'; pf.style.width = '15%';
+  const log = document.getElementById('log'); log.innerHTML = '';
+  logMsg(`Leyendo archivo ${file.name}...`);
+
+  try {
+    let txt = '';
+    if (file.name.endsWith('.docx')) {
+      const buf = await file.arrayBuffer(); pf.style.width = '40%';
+      const r = await mammoth.extractRawText({arrayBuffer: buf}); txt = r.value;
+    } else { txt = await file.text(); }
+
+    pf.style.width = '55%';
+    const projects = parseText(txt, tipo);
+    if (!projects.length) { logMsg('No se encontraron proyectos en el formato esperado.', 'err'); pb.style.display='none'; return; }
+    logMsg(`${projects.length} proyectos encontrados. Eliminando registros anteriores de tipo "${tipo}"...`);
+
+    // Borrar existentes de ese tipo
+    const { error: delErr } = await sb.from('proyectos').delete().eq('tipo', tipo);
+    if (delErr) { logMsg('Error al borrar: ' + delErr.message, 'err'); pb.style.display='none'; return; }
+
+    pf.style.width = '70%';
+    logMsg(`Subiendo ${projects.length} proyectos...`);
+
+    // Insertar en batches de 200
+    const BATCH = 200;
+    for (let i = 0; i < projects.length; i += BATCH) {
+      const batch = projects.slice(i, i + BATCH);
+      const { error: insErr } = await sb.from('proyectos').insert(batch);
+      if (insErr) { logMsg('Error al insertar: ' + insErr.message, 'err'); pb.style.display='none'; return; }
+      pf.style.width = Math.min(95, 70 + (i/projects.length)*25) + '%';
+      logMsg(`  → ${Math.min(i+BATCH, projects.length)} / ${projects.length} subidos`, 'info');
+    }
+
+    pf.style.width = '100%';
+    setTimeout(() => { pb.style.display = 'none'; pf.style.width = '0'; }, 600);
+    if (st) { st.style.color = 'var(--green)'; st.textContent = '✓ ' + projects.length + ' cargados'; }
+    logMsg(`✓ Listo. ${projects.length} ${tipo}s en la base de datos.`, 'ok');
+    showToast(`✓ ${projects.length} ${tipo}s cargadas correctamente`);
+  } catch(e) {
+    logMsg('Error inesperado: ' + e.message, 'err');
+    pb.style.display = 'none';
+    showToast('Error al procesar el archivo', 'err');
+    console.error(e);
+  }
+  input.value = '';
+}
+
+function previewImg(input) {
+  const file = input.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    pendingImgData = ev.target.result;
+    const prev = document.getElementById('img-preview');
+    prev.innerHTML = `<div class="img-prev-item"><img src="${pendingImgData}"><button onclick="clearImg()">×</button></div>`;
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearImg() {
+  pendingImgData = null;
+  document.getElementById('img-preview').innerHTML = '';
+  document.getElementById('m-img').value = '';
+}
+
+async function saveManual() {
+  const num = document.getElementById('m-num').value.trim();
+  const fecha = document.getElementById('m-fecha').value.trim();
+  const tipo = document.getElementById('m-tipo').value;
+  const desc = document.getElementById('m-desc').value.trim();
+  const expte = document.getElementById('m-expte').value.trim();
+
+  if (!num || !desc) { showToast('Completá al menos el número y la descripción', 'err'); return; }
+
+  const btn = document.getElementById('btn-save');
+  btn.disabled = true; btn.textContent = 'Guardando...';
+
+  const entry = {
+    id: tipo + '_' + num,
+    num, fecha, tipo,
+    descripcion: desc,
+    expediente: expte,
+    imagen_url: pendingImgData || null
+  };
+
+  const { error } = await sb.from('proyectos').upsert(entry);
+  btn.disabled = false; btn.textContent = 'Guardar proyecto';
+
+  if (error) { showToast('Error: ' + error.message, 'err'); return; }
+
+  showToast('✓ Proyecto guardado correctamente');
+  document.getElementById('m-num').value = '';
+  document.getElementById('m-fecha').value = '';
+  document.getElementById('m-desc').value = '';
+  document.getElementById('m-expte').value = '';
+  clearImg();
+}
+</script>
+</body>
+</html>

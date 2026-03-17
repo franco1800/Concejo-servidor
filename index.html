@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proyectos — Concejo Municipal Santa Fe</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600&family=IBM+Plex+Sans:wght@300;400;500&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#18181b;--ink2:#52525b;--ink3:#a1a1aa;
+  --bg:#f7f6f2;--card:#fff;--card2:#fafaf7;
+  --border:#e4e3dc;--border2:#d4d3cc;
+  --res:#1d4ed8;--res-bg:#eff6ff;
+  --ord:#0f766e;--ord-bg:#f0fdfa;
+  --com:#7c3aed;--com-bg:#f5f3ff;
+  --dec:#b45309;--dec-bg:#fffbeb;
+  --dcr:#be123c;--dcr-bg:#fff1f2;
+  --sans:'IBM Plex Sans',sans-serif;
+  --serif:'Lora',serif;
+  --mono:'IBM Plex Mono',monospace;
+  --r:10px;--r2:6px;
+  --sh:0 1px 2px rgba(0,0,0,0.05),0 2px 8px rgba(0,0,0,0.06);
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--ink);min-height:100vh}
+.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
+.topbar-title{font-family:var(--serif);font-size:1.1rem;font-weight:600;color:var(--ink)}
+.topbar-sub{font-size:11px;color:var(--ink3);margin-top:1px}
+.topbar a{font-size:12px;color:var(--ink2);text-decoration:none;border:1px solid var(--border);padding:6px 14px;border-radius:var(--r2);transition:all 0.15s}
+.topbar a:hover{border-color:var(--ink2);color:var(--ink)}
+.main{max-width:860px;margin:0 auto;padding:2rem 1.25rem 4rem}
+
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:1.75rem}
+.st{border-radius:var(--r2);padding:10px 12px;cursor:pointer;transition:all 0.15s;border:1.5px solid transparent}
+.st:hover{opacity:0.85}
+.st.active-filter{border-width:2px}
+.st .n{font-family:var(--serif);font-size:1.4rem;font-weight:600;line-height:1}
+.st .l{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:0.07em;margin-top:3px;opacity:0.75}
+.st-res{background:var(--res-bg);color:var(--res)}.st-res.active-filter{border-color:var(--res)}
+.st-ord{background:var(--ord-bg);color:var(--ord)}.st-ord.active-filter{border-color:var(--ord)}
+.st-com{background:var(--com-bg);color:var(--com)}.st-com.active-filter{border-color:var(--com)}
+.st-dec{background:var(--dec-bg);color:var(--dec)}.st-dec.active-filter{border-color:var(--dec)}
+.st-dcr{background:var(--dcr-bg);color:var(--dcr)}.st-dcr.active-filter{border-color:var(--dcr)}
+
+.badge{display:inline-flex;align-items:center;font-size:10.5px;font-weight:500;padding:2px 9px;border-radius:20px;letter-spacing:0.03em;white-space:nowrap}
+.badge-res{background:var(--res-bg);color:var(--res)}
+.badge-ord{background:var(--ord-bg);color:var(--ord)}
+.badge-com{background:var(--com-bg);color:var(--com)}
+.badge-dec{background:var(--dec-bg);color:var(--dec)}
+.badge-dcr{background:var(--dcr-bg);color:var(--dcr)}
+.badge-imagen{background:#f1f5f9;color:#475569}
+
+.controls{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem}
+.search-wrap{position:relative}
+.search-wrap svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--ink3);fill:none;stroke-width:2;pointer-events:none}
+.search-wrap input{width:100%;padding:10px 12px 10px 34px;border:1px solid var(--border);border-radius:var(--r2);font-size:13.5px;font-family:var(--sans);background:var(--card);color:var(--ink);outline:none;transition:border 0.15s}
+.search-wrap input:focus{border-color:var(--ink2)}
+.search-wrap input::placeholder{color:var(--ink3)}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap}
+.filter-row select{flex:1;min-width:120px;padding:9px 28px 9px 10px;border:1px solid var(--border);border-radius:var(--r2);font-size:12.5px;font-family:var(--sans);background:var(--card);color:var(--ink);outline:none;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23a1a1aa' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;transition:border 0.15s}
+.filter-row select:focus{border-color:var(--ink2)}
+
+.result-info{font-size:12px;color:var(--ink3);margin-bottom:10px}
+.result-info strong{color:var(--ink2);font-weight:500}
+
+.cards-list{display:flex;flex-direction:column;gap:6px}
+.pcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:13px 15px;transition:all 0.15s}
+.pcard:hover{border-color:var(--border2);box-shadow:var(--sh)}
+.pcard-top{display:flex;align-items:flex-start;gap:9px;margin-bottom:7px}
+.num-pill{font-size:11.5px;font-weight:500;background:#f4f4f5;color:var(--ink2);padding:3px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.pcard-desc{font-size:13px;color:var(--ink);line-height:1.55}
+.pcard-foot{display:flex;align-items:center;flex-wrap:wrap;gap:6px;padding-top:7px;border-top:1px solid var(--border)}
+.pdate{font-size:11px;color:var(--ink3);display:flex;align-items:center;gap:3px}
+.pdate svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2}
+.expte{font-size:10.5px;color:var(--ink3);font-family:var(--mono);margin-left:auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:55%}
+
+.img-thumb{width:44px;height:44px;object-fit:cover;border-radius:5px;border:1px solid var(--border);margin-left:auto;cursor:pointer;flex-shrink:0}
+.img-expand{display:none;margin-top:8px;text-align:center}
+.img-expand img{max-width:100%;border-radius:6px;border:1px solid var(--border);cursor:zoom-out}
+.img-expand.open{display:block}
+
+mark{background:#fde68a;border-radius:2px;padding:0 1px}
+.empty{text-align:center;padding:4rem 1rem;color:var(--ink3);font-size:13px}
+.empty div{font-size:2rem;margin-bottom:8px}
+.loading{text-align:center;padding:3rem;color:var(--ink3);font-size:13px}
+
+.pager{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:1.25rem;font-size:12px;color:var(--ink2)}
+.pager button{padding:6px 14px;border:1px solid var(--border);border-radius:var(--r2);background:var(--card);font-size:12px;font-family:var(--sans);color:var(--ink2);cursor:pointer;transition:all 0.15s}
+.pager button:hover{border-color:var(--ink2);color:var(--ink)}
+
+@media(max-width:600px){
+  .stats{grid-template-columns:repeat(3,1fr)}
+  .st:nth-child(4),.st:nth-child(5){grid-column:span 1}
+  .topbar a{display:none}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div>
+    <div class="topbar-title">Concejo Municipal · Santa Fe</div>
+    <div class="topbar-sub">Buscador de proyectos aprobados</div>
+  </div>
+  <a href="admin.html">Panel de carga →</a>
+</div>
+
+<div class="main">
+  <div class="stats">
+    <div class="st st-res" id="st-res" onclick="toggleType('resolución')"><div class="n" id="cnt-res">—</div><div class="l">Resoluciones</div></div>
+    <div class="st st-ord" id="st-ord" onclick="toggleType('ordenanza')"><div class="n" id="cnt-ord">—</div><div class="l">Ordenanzas</div></div>
+    <div class="st st-com" id="st-com" onclick="toggleType('comunicación')"><div class="n" id="cnt-com">—</div><div class="l">Comunicaciones</div></div>
+    <div class="st st-dec" id="st-dec" onclick="toggleType('declaración')"><div class="n" id="cnt-dec">—</div><div class="l">Declaraciones</div></div>
+    <div class="st st-dcr" id="st-dcr" onclick="toggleType('decreto')"><div class="n" id="cnt-dcr">—</div><div class="l">Decretos</div></div>
+  </div>
+
+  <div class="controls">
+    <div class="search-wrap">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="searchInput" placeholder="Buscar por número, descripción, expediente..." oninput="applyFilters()">
+    </div>
+    <div class="filter-row">
+      <select id="typeFilter" onchange="syncType()">
+        <option value="">Todos los tipos</option>
+        <option value="resolución">Resoluciones</option>
+        <option value="ordenanza">Ordenanzas</option>
+        <option value="comunicación">Comunicaciones</option>
+        <option value="declaración">Declaraciones</option>
+        <option value="decreto">Decretos</option>
+      </select>
+      <select id="yearFilter" onchange="applyFilters()"><option value="">Todos los años</option></select>
+      <select id="sortFilter" onchange="applyFilters()">
+        <option value="num_desc">Número ↓</option>
+        <option value="num_asc">Número ↑</option>
+        <option value="date_desc">Más recientes</option>
+        <option value="date_asc">Más antiguos</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="result-info" id="resInfo"></div>
+  <div class="cards-list" id="cards"><div class="loading">Cargando proyectos...</div></div>
+  <div class="pager" id="pager"></div>
+</div>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const PS = 20;
+let all = [], filtered = [], page = 1, activeType = '';
+
+const TYPES = {resolución:'res',ordenanza:'ord',comunicación:'com',declaración:'dec',decreto:'dcr'};
+const LABELS = {resolución:'Resolución',ordenanza:'Ordenanza',comunicación:'Comunicación',declaración:'Declaración',decreto:'Decreto',imagen:'Imagen'};
+const BADGE = {resolución:'badge-res',ordenanza:'badge-ord',comunicación:'badge-com',declaración:'badge-dec',decreto:'badge-dcr',imagen:'badge-imagen'};
+
+async function loadAll() {
+  const { data, error } = await sb.from('proyectos').select('*').order('num', { ascending: false });
+  if (error) { document.getElementById('cards').innerHTML = '<div class="empty"><div>⚠️</div>Error al conectar con la base de datos.</div>'; return; }
+  all = data || [];
+  buildYears();
+  updateStats();
+  applyFilters();
+}
+
+function buildYears() {
+  const years = [...new Set(all.map(p => getYear(p.fecha)).filter(Boolean))].sort((a,b) => b-a);
+  const yf = document.getElementById('yearFilter');
+  yf.innerHTML = '<option value="">Todos los años</option>' + years.map(y => `<option value="${y}">${y}</option>`).join('');
+}
+
+function updateStats() {
+  const counts = {resolución:0,ordenanza:0,comunicación:0,declaración:0,decreto:0};
+  all.forEach(p => { if (counts[p.tipo] !== undefined) counts[p.tipo]++; });
+  Object.entries(counts).forEach(([t,c]) => {
+    const el = document.getElementById('cnt-' + TYPES[t]);
+    if (el) el.textContent = c.toLocaleString('es-AR');
+  });
+}
+
+function getYear(f) {
+  if (!f || f === '—') return null;
+  const p = f.split(/[\/\-]/); if (p.length < 3) return null;
+  let y = p[2]; if (y.length === 2) y = '20' + y;
+  return parseInt(y);
+}
+function parseDate(f) {
+  if (!f || f === '—') return null;
+  const p = f.split(/[\/\-]/); if (p.length < 3) return null;
+  let y = p[2]; if (y.length === 2) y = '20' + y;
+  return new Date(y, p[1]-1, p[0]);
+}
+
+function toggleType(tipo) {
+  activeType = activeType === tipo ? '' : tipo;
+  document.querySelectorAll('.st').forEach(el => el.classList.remove('active-filter'));
+  if (activeType) {
+    document.getElementById('st-' + TYPES[activeType])?.classList.add('active-filter');
+  }
+  document.getElementById('typeFilter').value = activeType;
+  applyFilters();
+}
+
+function syncType() {
+  activeType = document.getElementById('typeFilter').value;
+  document.querySelectorAll('.st').forEach(el => el.classList.remove('active-filter'));
+  if (activeType && TYPES[activeType]) {
+    document.getElementById('st-' + TYPES[activeType])?.classList.add('active-filter');
+  }
+  applyFilters();
+}
+
+function hl(txt, q) {
+  if (!q || !txt) return txt || '';
+  return String(txt).replace(new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi'), '<mark>$1</mark>');
+}
+
+function applyFilters() {
+  const raw = document.getElementById('searchInput').value.trim();
+  const q = raw.toLowerCase();
+  const yr = document.getElementById('yearFilter').value;
+  const tp = document.getElementById('typeFilter').value || activeType;
+  const so = document.getElementById('sortFilter').value;
+
+  filtered = all.filter(p => {
+    if (tp && p.tipo !== tp) return false;
+    if (yr && getYear(p.fecha) != yr) return false;
+    if (q && !`${p.num} ${p.descripcion} ${p.expediente}`.toLowerCase().includes(q)) return false;
+    return true;
+  });
+
+  filtered.sort((a, b) => {
+    if (so === 'num_asc') return parseInt(a.num||0) - parseInt(b.num||0);
+    if (so === 'num_desc') return parseInt(b.num||0) - parseInt(a.num||0);
+    const da = parseDate(a.fecha)||0, db = parseDate(b.fecha)||0;
+    return so === 'date_asc' ? da-db : db-da;
+  });
+
+  const ri = document.getElementById('resInfo');
+  ri.innerHTML = `Mostrando <strong>${filtered.length}</strong> de <strong>${all.length}</strong> proyectos`;
+  page = 1;
+  render(raw);
+}
+
+function render(raw) {
+  const q = raw || '';
+  const start = (page-1) * PS;
+  const slice = filtered.slice(start, start+PS);
+  const c = document.getElementById('cards');
+
+  if (!all.length) { c.innerHTML = '<div class="empty"><div>📋</div>No hay proyectos cargados aún.</div>'; document.getElementById('pager').innerHTML=''; return; }
+  if (!filtered.length) { c.innerHTML = '<div class="empty"><div>🔍</div>No se encontraron proyectos con esos criterios.</div>'; document.getElementById('pager').innerHTML=''; return; }
+
+  c.innerHTML = slice.map(p => {
+    const shortE = p.expediente ? p.expediente.split(' - ')[0] : '';
+    const imgHtml = p.imagen_url ? `<img src="${p.imagen_url}" class="img-thumb" onclick="toggleImg('${p.id}')" title="Ver imagen">` : '';
+    const imgExpand = p.imagen_url ? `<div class="img-expand" id="img-${p.id}"><img src="${p.imagen_url}" onclick="toggleImg('${p.id}')"></div>` : '';
+    return `<div class="pcard">
+      <div class="pcard-top">
+        <span class="num-pill">#${hl(p.num, q)}</span>
+        <span class="pcard-desc">${hl(p.descripcion, q)}</span>
+        ${imgHtml}
+      </div>
+      <div class="pcard-foot">
+        <span class="badge ${BADGE[p.tipo]||'badge-res'}">${LABELS[p.tipo]||p.tipo}</span>
+        <span class="pdate"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>${p.fecha||'—'}</span>
+        ${shortE ? `<span class="expte">${hl(shortE, q)}</span>` : ''}
+      </div>
+      ${imgExpand}
+    </div>`;
+  }).join('');
+
+  const tot = Math.ceil(filtered.length / PS);
+  const pg = document.getElementById('pager');
+  if (tot <= 1) { pg.innerHTML=''; return; }
+  pg.innerHTML = (page>1 ? `<button onclick="go(${page-1})">← Anterior</button>` : '')
+    + `<span style="color:var(--ink3)">${page} / ${tot}</span>`
+    + (page<tot ? `<button onclick="go(${page+1})">Siguiente →</button>` : '');
+}
+
+function toggleImg(id) {
+  const el = document.getElementById('img-' + id);
+  if (el) el.classList.toggle('open');
+}
+
+function go(n) { page = n; render(document.getElementById('searchInput').value.trim()); window.scrollTo({top:0,behavior:'smooth'}); }
+
+loadAll();
+</script>
+</body>
+</html>
