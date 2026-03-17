@@ -1,2 +1,2 @@
 const SUPABASE_URL = 'https://uyqkdwazxrqaxmjwglmc.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_7JQlz3uP3StG4cBlcMKJiQ_Iyk_a8...'; // ← reemplazá con tu clave completa
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV5cWtkd2F6eHJxYXhtandnbG1jIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM3MzI4NTIsImV4cCI6MjA4OTMwODg1Mn0.n-oLsHFOJI5shvWsGn1WvLOhtYMeCe148XtwHP80Zxc';
